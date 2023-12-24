@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+            font-size: 16px;
+            line-height: 1.6;
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+            font-size: 36px;
+        }
+
+        form {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #prediction-result {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+            color: #007BFF;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Add this CSS to your stylesheet or in a style block in your HTML */
+
+        input[type="number"] {
+            width: 97%;
+        }
+
+        /* Responsive design for smaller screens */
+        @media only screen and (max-width: 600px) {
+            form {
+                width: 80%;
+            }
+
+            input[type="number"] {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Heart Disease Prediction</h1>
+    <form id="prediction-form">
+        <!-- Input fields for your features -->
+        <!-- Age -->
+        <label for="age">Age:</label>
+        <input type="number" name="age" id="age" required>
+
+        <!-- Sex (Dropdown) -->
+        <label for="sex">Sex:</label>
+        <select name="sex" id="sex" required>
+            <option value="">Not Selected</option>
+            <option value="1">Male</option>
+            <option value="0">Female</option>
+        </select>
+
+        <!-- Chest Pain Type -->
+        <label for="cp">Chest Pain Type:</label>
+        <select name="cp" id="cp" required>
+            <option value="">Not Selected</option>
+            <option value="0">Typical Angina</option>
+            <option value="1">Atypical Angina</option>
+            <option value="2">Non-Anginal Pain</option>
+            <option value="3">Asymptomatic</option>
+        </select>
+
+        <!-- Resting Blood Pressure -->
+        <label for="trestbps">Resting Blood Pressure:</label>
+        <input type="number" name="trestbps" id="trestbps" required>
+
+        <!-- Serum Cholesterol -->
+        <label for="chol">Serum Cholesterol:</label>
+        <input type="number" name="chol" id="chol" required>
+
+        <!-- Fasting Blood Sugar (> 120 mg/dl) -->
+        <label for="fbs">Fasting Blood Sugar:</label>
+        <select name="fbs" id="fbs" required>
+            <option value="">Not Selected</option>
+            <option value="1">> 120 mg/dl (True)</option>
+            <option value="0">
+                <= 120 mg/dl (False)</option>
+        </select>
+
+        <!-- Resting Electrocardiographic Results -->
+        <label for="restecg">Resting Electrocardiographic Results:</label>
+        <select name="restecg" id="restecg" required>
+            <option value="">Not Selected</option>
+            <option value="0">Nothing To Note</option>
+            <option value="1">ST-T Wave Abnormality</option>
+            <option value="2">Possible or Definite Left Ventricular Hypertrophy</option>
+        </select>
+
+        <!-- Maximum Heart Rate Achieved -->
+        <label for="thalach">Maximum Heart Rate Achieved:</label>
+        <input type="number" name="thalach" id="thalach" required>
+
+        <!-- Exercise-Induced Angina -->
+        <label for="exang">Exercise-Induced Angina:</label>
+        <select name="exang" id="exang" required>
+            <option value="">Not Selected</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+
+        <!-- ST Depression Induced by Exercise -->
+        <label for="oldpeak">ST Depression Induced by Exercise:</label>
+        <input type="number" name="oldpeak" id="oldpeak" required>
+
+        <!-- Slope of Peak Exercise ST Segment -->
+        <label for="slope">Slope of Peak Exercise ST Segment:</label>
+        <select name="slope" id="slope" required>
+            <option value="">Not Selected</option>
+            <option value="0">Upsloping</option>
+            <option value="1">Flatsloping</option>
+            <option value="2">Downsloping</option>
+        </select>
+
+        <!-- Number of Major Vessels Colored by Fluoroscopy -->
+        <label for="ca">Number of Major Vessels Colored by Fluoroscopy:</label>
+        <input type="number" name="ca" id="ca" required>
+
+        <!-- Thalassemia Type -->
+        <label for="thal">Thalassemia Type:</label>
+        <select name="thal" id="thal" required>
+            <option value="">Not Selected</option>
+            <option value="1,3">Normal</option>
+            <option value="6">Fixed Defect</option>
+            <option value="7">Reversible Defect</option>
+        </select>
+
+        <!-- Predict Button -->
+        <button type="button" onclick="predict()">Predict</button>
+    </form>
+    <!-- Error Messages -->
+    <div class="error-message" id="error-message"></div>
+    <!-- Prediction Result -->
+    <p id="prediction-result"></p>
+
+    <script>
+        function predict() {
+            // Collect input values
+            var age = document.getElementById('age').value;
+            var sex = document.getElementById('sex').value;
+            var cp = document.getElementById('cp').value;
+            var trestbps = document.getElementById('trestbps').value;
+            var chol = document.getElementById('chol').value;
+            var fbs = document.getElementById('fbs').value;
+            var restecg = document.getElementById('restecg').value;
+            var thalach = document.getElementById('thalach').value;
+            var exang = document.getElementById('exang').value;
+            var oldpeak = document.getElementById('oldpeak').value;
+            var slope = document.getElementById('slope').value;
+            var ca = document.getElementById('ca').value;
+            var thal = document.getElementById('thal').value;
+            // Add validation
+            var errorMessages = [];
+
+            if (age === "") {
+                errorMessages.push("Age is required")
+            }
+            if (sex === "") {
+                errorMessages.push("Sex is required")
+            }
+            if (cp === "") {
+                errorMessages.push("Chest Pain Type is required")
+            }
+            if (trestbps === "") {
+                errorMessages.push("Resting Blood Pressure required")
+            }
+            if (chol === "") {
+                errorMessages.push("Serm Cholesterol is required")
+            }
+            if (fbs === "") {
+                errorMessages.push("Fasting Blood Sugar is required")
+            }
+            if (restecg === "") {
+                errorMessages.push("Resting Electrocardiographic Results is required")
+            }
+            if (thalach === "") {
+                errorMessages.push("Maximum Heart Rate Achieved is required")
+            }
+            if (exang === "") {
+                errorMessages.push("Exercise-Induced Angina is required")
+            }
+            if (oldpeak === "") {
+                errorMessages.push("ST Depression Induced by Exercise is required")
+            }
+            if (slope === "") {
+                errorMessages.push("Slope of Peak Exercisse ST Segment is required")
+            }
+            if (ca === "") {
+                errorMessages.push("Number of Major Vessels Colored by Fluoroscopy is required")
+            }
+            if (thal === "") {
+                errorMessages.push("Thalassemai Type is required")
+            }
+            // Send a POST request to the Flask server
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'age': age,
+                    'sex': sex,
+                    'cp': cp,
+                    'trestbps': trestbps,
+                    'chol': chol,
+                    'fbs': fbs,
+                    'restecg': restecg,
+                    'thalach': thalach,
+                    'exang': exang,
+                    'oldpeak': oldpeak,
+                    'slope': slope,
+                    'ca': ca,
+                    'thal': thal
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Determine the prediction message based on the target value
+                    var predictionResult = '';
+                    if (data.prediction === 1) {
+                        predictionResult = 'Prediction: You have a heart disease.';
+                    } else {
+                        predictionResult = 'Prediction: You do not have a heart disease.';
+                    }
+                    document.getElementById('prediction-result').innerHTML = predictionResult;
+                });
+        }
+    </script>
+</body>
+</html>
